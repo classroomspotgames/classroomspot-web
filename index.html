@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>classroomspot web</title>
+<title>ClassroomSpot Web</title>
 
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script src="/baremux/index.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 <style>
@@ -23,14 +23,146 @@ html, body {
     overflow: hidden;
 }
 
+/* ===== CUSTOM CURSOR - WHITE STAR ===== */
+* {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>') 12 12, auto !important;
+}
+
+/* ===== FALLING STARS BACKGROUND ===== */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+}
+
+.falling-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+    animation: fall linear infinite;
+}
+
+.falling-star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+    right: 2px;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes fall {
+    0% {
+        transform: translateX(0) translateY(0) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-500px) translateY(500px) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+/* ===== NEON TEXT EFFECTS ===== */
+.neon-text {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 40px #00ffff,
+        0 0 80px #00ffff,
+        0 0 90px #00ffff,
+        0 0 100px #00ffff,
+        0 0 150px #00ffff;
+    animation: flicker 3s infinite alternate;
+    letter-spacing: 0.15em;
+}
+
+.neon-text-pink {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 40px #ff00de,
+        0 0 80px #ff00de,
+        0 0 90px #ff00de,
+        0 0 100px #ff00de,
+        0 0 150px #ff00de;
+    animation: flicker 2s infinite alternate;
+}
+
+.neon-text-blue {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 40px #0080ff,
+        0 0 80px #0080ff,
+        0 0 90px #0080ff,
+        0 0 100px #0080ff,
+        0 0 150px #0080ff;
+    animation: flicker 2.5s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow: 
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 20px #fff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff,
+            0 0 90px #00ffff,
+            0 0 100px #00ffff,
+            0 0 150px #00ffff;
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.8;
+    }
+}
+
 /* ===== TOP BAR ===== */
 .browser-ui {
     height: 96px;
-    background: #2b2b2b;
+    background: rgba(10, 10, 20, 0.85);
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #00ffff;
     z-index: 10;
+    position: relative;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
 }
 
 /* ===== TABS ===== */
@@ -49,17 +181,22 @@ html, body {
     max-width: 220px;
     padding: 0 12px;
     border-radius: 8px 8px 0 0;
-    background: #212121;
+    background: #1a1a2e;
     color: #ddd;
     display: flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    font-size: 12px;
 }
 
 .tab.active {
-    background: #151515;
-    color: white;
+    background: #0f0f1e;
+    color: #00ffff;
+    border-color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1);
+    text-shadow: 0 0 5px #00ffff;
 }
 
 .tab span {
@@ -71,10 +208,12 @@ html, body {
 
 .tab i {
     opacity: .6;
+    transition: all 0.3s ease;
 }
 .tab i:hover {
     opacity: 1;
-    color: #ff6b6b;
+    color: #ff00de;
+    text-shadow: 0 0 10px #ff00de;
 }
 
 .newtab {
@@ -84,9 +223,14 @@ html, body {
     border: none;
     background: transparent;
     color: #aaa;
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
-.newtab:hover { background: #444; }
+.newtab:hover { 
+    background: #1a1a2e; 
+    color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+    text-shadow: 0 0 5px #00ffff;
+}
 
 /* ===== NAV BAR ===== */
 .navbar {
@@ -104,23 +248,33 @@ html, body {
     border: none;
     background: transparent;
     color: #bbb;
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
 .navbar button:hover {
-    background: #3a3a3a;
-    color: white;
+    background: #1a1a2e;
+    color: #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 5px #00ffff;
+    transform: scale(1.1);
 }
 
 /* ===== URL BAR ===== */
 .urlbar {
     flex: 1;
     height: 36px;
-    background: #161616;
+    background: #0f0f1e;
     border-radius: 18px;
     padding: 0 16px;
     display: flex;
     align-items: center;
-    color:white;
+    color: white;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+}
+
+.urlbar:focus-within {
+    border-color: #00ffff;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1);
 }
 
 .urlbar input {
@@ -129,8 +283,14 @@ html, body {
     background: transparent;
     border: none;
     outline: none;
-    color: white;
+    color: #00ffff;
     font-size: 14px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.urlbar input::placeholder {
+    color: #555;
+    font-family: 'Orbitron', sans-serif;
 }
 
 /* ===== VIEWPORT ===== */
@@ -142,6 +302,7 @@ html, body {
     height: calc(100% - 96px);
     border: none;
     display: none;
+    z-index: 5;
 }
 
 .viewframe.active {
@@ -156,15 +317,44 @@ html, body {
     width: 100%;
     height: calc(100% - 96px);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     pointer-events: none;
+    z-index: 5;
+    gap: 20px;
+}
+
+.ntp h1 {
+    font-size: 3.5rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.ntp .subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: #ff00de;
+    text-shadow: 
+        0 0 5px #ff00de,
+        0 0 10px #ff00de,
+        0 0 20px #ff00de;
+    letter-spacing: 0.3em;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
+
+<!-- Falling Stars Background -->
+<div class="stars-container" id="starsContainer"></div>
 
 <div class="browser-ui">
     <div class="tabs" id="tabs">
@@ -185,10 +375,60 @@ html, body {
 </div>
 
 <div class="ntp" id="ntp">
-    <h1>classroomspot web <h1>
+    <h1 class="neon-text">ClassroomSpot</h1>
+    <div class="subtitle">WEB</div>
 </div>
 
 <script>
+// Create falling stars background
+function createStars() {
+    const container = document.getElementById('starsContainer');
+    const starCount = 150;
+    
+    // Create static twinkling stars
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        
+        // Random star sizes
+        const size = Math.random() * 2 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        
+        container.appendChild(star);
+    }
+    
+    // Create falling stars
+    function createFallingStar() {
+        const fallingStar = document.createElement('div');
+        fallingStar.className = 'falling-star';
+        fallingStar.style.left = (Math.random() * 100 + 20) + '%';
+        fallingStar.style.top = '-10px';
+        fallingStar.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        
+        // Random colors for falling stars
+        const colors = ['#ffffff', '#00ffff', '#ff00de', '#0080ff'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        fallingStar.style.background = color;
+        fallingStar.style.boxShadow = `0 0 10px 2px ${color}`;
+        
+        container.appendChild(fallingStar);
+        
+        setTimeout(() => {
+            fallingStar.remove();
+        }, 4000);
+    }
+    
+    // Create falling stars periodically
+    setInterval(createFallingStar, 600);
+}
+
+createStars();
+
 navigator.serviceWorker?.register("/uv/sw.js")
 
 const connection = new BareMux.BareMuxConnection("/baremux/worker.js")
@@ -340,7 +580,3 @@ createTab()
 
 </body>
 </html>
-
-
-
-
