@@ -9,7 +9,7 @@
 <script src="/uv/uv.config.js"></script>
 <script src="/baremux/index.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 <style>
@@ -300,48 +300,54 @@ html, body {
     gap: 30px;
 }
 
-/* ===== CENTER SEARCH BAR (below title) ===== */
-.center-search-container {
+/* ===== FROSTED CLOCK WIDGET ===== */
+.clock-widget {
     pointer-events: auto;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 28px 32px;
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 30px rgba(125,216,248,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    max-width: 340px;
     width: 100%;
-    max-width: 600px;
-    padding: 0 20px;
+    color: #fff;
+    text-align: center;
 }
 
-.center-search {
-    width: 100%;
-    height: 50px;
-    background: rgba(10, 10, 20, 0.9);
-    border-radius: 25px;
-    border: 1px solid #7dd8f8;
+.clock-widget #clock {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+}
+
+.clock-widget #date {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 6px;
+    color: rgba(255,255,255,0.75);
+}
+
+.clock-bottom {
+    margin-top: 20px;
     display: flex;
     align-items: center;
-    padding: 0 25px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(125, 216, 248, 0.3), inset 0 0 20px rgba(125, 216, 248, 0.05);
+    justify-content: space-between;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
 }
 
-.center-search:focus-within {
-    border-color: #7dd8f8;
-    box-shadow: 0 0 30px rgba(125, 216, 248, 0.6), inset 0 0 20px rgba(125, 216, 248, 0.1);
-}
-
-.center-search input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #888;
-    font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-}
-
-.center-search input::placeholder {
-    color: #555;
-    font-family: 'Inter', sans-serif;
+.clock-bottom .battery-row,
+.clock-bottom .weather-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 </style>
 </head>
@@ -372,11 +378,20 @@ html, body {
 <div class="ntp" id="ntp">
     <h1 class="neon-text">classroomspot</h1>
     
-    <!-- Center Search Bar -->
-    <div class="center-search-container">
-        <form class="center-search" id="centerForm">
-            <input id="centerUrl" placeholder="Search Google or type an URL">
-        </form>
+    <!-- Frosted Clock Widget -->
+    <div class="clock-widget">
+        <div id="clock">00:00:00 AM</div>
+        <div id="date">Loading...</div>
+        <div class="clock-bottom">
+            <div class="battery-row">
+                <i id="battery-icon" class="fas fa-battery-three-quarters" style="color:#4ade80;"></i>
+                <span id="battery-level">--%</span>
+            </div>
+            <div class="weather-row">
+                <i class="fas fa-temperature-half" style="opacity:0.8;"></i>
+                <span id="temp-val">--°F</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -584,10 +599,64 @@ form.onsubmit = e => {
     if (urlInput.value.trim()) navigate(urlInput.value)
 }
 
-document.getElementById("centerForm").onsubmit = e => {
+document.getElementById("centerForm")?.addEventListener("submit", e => {
     e.preventDefault()
-    if (centerUrlInput.value.trim()) navigate(centerUrlInput.value)
+    if (centerUrlInput?.value?.trim()) navigate(centerUrlInput.value)
+})
+
+// ===== CLOCK / BATTERY / WEATHER =====
+function updateClock() {
+    const now = new Date();
+    document.getElementById("clock").textContent = now.toLocaleTimeString([], {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    document.getElementById("date").textContent = now.toLocaleDateString(undefined, {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
 }
+
+function updateBattery() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+            const level = Math.round(battery.level * 100);
+            const iconEl = document.getElementById("battery-icon");
+            let cls = 'fas ';
+            let color = '';
+            if (level <= 10) { cls += 'fa-battery-empty'; color = 'color:#ef4444;'; }
+            else if (level <= 30) { cls += 'fa-battery-quarter'; color = 'color:#eab308;'; }
+            else { cls += 'fa-battery-three-quarters'; color = 'color:#4ade80;'; }
+            iconEl.className = cls;
+            iconEl.style.cssText = color;
+            document.getElementById("battery-level").textContent = level + '%';
+        });
+    } else {
+        document.getElementById("battery-icon").className = 'fas fa-exclamation-triangle';
+        document.getElementById("battery-level").textContent = 'N/A';
+    }
+}
+
+function updateWeather() {
+    const tempEl = document.getElementById('temp-val');
+    const fetchTemp = (lat, lon) => {
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit`)
+            .then(r => r.json())
+            .then(d => { tempEl.textContent = Math.round(d.current_weather.temperature) + '°F'; })
+            .catch(() => { tempEl.textContent = 'N/A'; });
+    };
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            p => fetchTemp(p.coords.latitude, p.coords.longitude),
+            () => fetchTemp(34.05, -118.24)
+        );
+    } else { fetchTemp(34.05, -118.24); }
+}
+
+updateClock();
+updateBattery();
+updateWeather();
+setInterval(updateClock, 1000);
+setInterval(updateBattery, 60000);
+setInterval(updateWeather, 600000);
 
 newTabBtn.onclick = () => createTab()
 
