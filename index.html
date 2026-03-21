@@ -9,7 +9,7 @@
 <script src="/uv/uv.config.js"></script>
 <script src="/baremux/index.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
 <style>
@@ -23,12 +23,7 @@ html, body {
     overflow: hidden;
 }
 
-/* ===== CUSTOM CURSOR - WHITE STAR ===== */
-* {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>') 12 12, auto !important;
-}
-
-/* ===== FALLING STARS BACKGROUND ===== */
+/* ===== LIGHT BLUE PARTICLES BACKGROUND ===== */
 .stars-container {
     position: fixed;
     top: 0;
@@ -44,31 +39,32 @@ html, body {
     position: absolute;
     width: 2px;
     height: 2px;
-    background: #00d4ff;
+    background: #7dd8f8;
     border-radius: 50%;
     animation: twinkle 3s infinite;
-    box-shadow: 0 0 6px #00d4ff;
+    box-shadow: 0 0 6px #7dd8f8;
 }
 
+/* Particle that waves to the right */
 .falling-star {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #00d4ff;
+    width: 3px;
+    height: 3px;
+    background: #7dd8f8;
     border-radius: 50%;
-    box-shadow: 0 0 10px 2px rgba(0, 212, 255, 0.8);
-    animation: fall linear infinite;
+    box-shadow: 0 0 10px 2px rgba(125, 216, 248, 0.8);
+    animation: waveRight linear infinite;
 }
 
-.falling-star::before {
+.falling-star::after {
     content: '';
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 100px;
+    width: 80px;
     height: 1px;
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(0,212,255,0) 100%);
-    right: 2px;
+    background: linear-gradient(270deg, rgba(125,216,248,1) 0%, rgba(125,216,248,0) 100%);
+    left: 3px;
 }
 
 @keyframes twinkle {
@@ -76,35 +72,38 @@ html, body {
     50% { opacity: 1; transform: scale(1.2); }
 }
 
-@keyframes fall {
+/* Wave to the right animation with sine-wave vertical oscillation */
+@keyframes waveRight {
     0% {
-        transform: translateX(0) translateY(0) rotate(45deg);
-        opacity: 1;
+        transform: translateX(0) translateY(0);
+        opacity: 0;
     }
+    10% { opacity: 1; }
+    90% { opacity: 0.8; }
     100% {
-        transform: translateX(-500px) translateY(500px) rotate(45deg);
+        transform: translateX(600px) translateY(var(--wave-offset, 0px));
         opacity: 0;
     }
 }
 
 /* ===== NEON TEXT EFFECTS ===== */
 .neon-text {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
     color: #fff;
-    font-weight: 900;
-    font-size: 5rem;
+    font-weight: 400;
+    font-size: 6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     text-shadow: 
         0 0 5px #fff,
         0 0 10px #fff,
-        0 0 20px #00d4ff,
-        0 0 40px #00d4ff,
-        0 0 80px #00d4ff,
-        0 0 90px #00d4ff,
-        0 0 100px #00d4ff,
-        0 0 150px #00d4ff;
+        0 0 20px #7dd8f8,
+        0 0 40px #7dd8f8,
+        0 0 80px #7dd8f8,
+        0 0 90px #7dd8f8,
+        0 0 100px #7dd8f8,
+        0 0 150px #7dd8f8;
     animation: flicker 3s infinite alternate;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
 }
 
 @keyframes flicker {
@@ -112,12 +111,12 @@ html, body {
         text-shadow: 
             0 0 5px #fff,
             0 0 10px #fff,
-            0 0 20px #00d4ff,
-            0 0 40px #00d4ff,
-            0 0 80px #00d4ff,
-            0 0 90px #00d4ff,
-            0 0 100px #00d4ff,
-            0 0 150px #00d4ff;
+            0 0 20px #7dd8f8,
+            0 0 40px #7dd8f8,
+            0 0 80px #7dd8f8,
+            0 0 90px #7dd8f8,
+            0 0 100px #7dd8f8,
+            0 0 150px #7dd8f8;
         opacity: 1;
     }
     20%, 24%, 55% {
@@ -132,11 +131,11 @@ html, body {
     background: rgba(10, 10, 20, 0.85);
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid #00d4ff;
+    border-bottom: 1px solid #7dd8f8;
     z-index: 10;
     position: relative;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 20px rgba(125, 216, 248, 0.2);
 }
 
 /* ===== TABS ===== */
@@ -167,10 +166,10 @@ html, body {
 
 .tab.active {
     background: #0f0f1e;
-    color: #00d4ff;
-    border-color: #00d4ff;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(0, 212, 255, 0.1);
-    text-shadow: 0 0 5px #00d4ff;
+    color: #7dd8f8;
+    border-color: #7dd8f8;
+    box-shadow: 0 0 15px rgba(125, 216, 248, 0.4), inset 0 0 10px rgba(125, 216, 248, 0.1);
+    text-shadow: 0 0 5px #7dd8f8;
 }
 
 .tab span {
@@ -186,8 +185,8 @@ html, body {
 }
 .tab i:hover {
     opacity: 1;
-    color: #00d4ff;
-    text-shadow: 0 0 10px #00d4ff;
+    color: #7dd8f8;
+    text-shadow: 0 0 10px #7dd8f8;
 }
 
 .newtab {
@@ -201,9 +200,9 @@ html, body {
 }
 .newtab:hover { 
     background: #1a1a2e; 
-    color: #00d4ff;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-    text-shadow: 0 0 5px #00d4ff;
+    color: #7dd8f8;
+    box-shadow: 0 0 15px rgba(125, 216, 248, 0.6);
+    text-shadow: 0 0 5px #7dd8f8;
 }
 
 /* ===== NAV BAR ===== */
@@ -226,9 +225,9 @@ html, body {
 }
 .navbar button:hover {
     background: #1a1a2e;
-    color: #00d4ff;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-    text-shadow: 0 0 5px #00d4ff;
+    color: #7dd8f8;
+    box-shadow: 0 0 15px rgba(125, 216, 248, 0.5);
+    text-shadow: 0 0 5px #7dd8f8;
     transform: scale(1.1);
 }
 
@@ -247,8 +246,8 @@ html, body {
 }
 
 .urlbar:focus-within {
-    border-color: #00d4ff;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(0, 212, 255, 0.1);
+    border-color: #7dd8f8;
+    box-shadow: 0 0 20px rgba(125, 216, 248, 0.4), inset 0 0 10px rgba(125, 216, 248, 0.1);
 }
 
 .urlbar input {
@@ -257,14 +256,15 @@ html, body {
     background: transparent;
     border: none;
     outline: none;
-    color: #00d4ff;
+    color: #7dd8f8;
     font-size: 14px;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
 }
 
 .urlbar input::placeholder {
     color: #555;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Bebas Neue', sans-serif;
 }
 
 /* ===== VIEWPORT ===== */
@@ -313,18 +313,18 @@ html, body {
     height: 50px;
     background: rgba(10, 10, 20, 0.9);
     border-radius: 25px;
-    border: 1px solid #00d4ff;
+    border: 1px solid #7dd8f8;
     display: flex;
     align-items: center;
     padding: 0 25px;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05);
+    box-shadow: 0 0 20px rgba(125, 216, 248, 0.3), inset 0 0 20px rgba(125, 216, 248, 0.05);
 }
 
 .center-search:focus-within {
-    border-color: #00d4ff;
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), inset 0 0 20px rgba(0, 212, 255, 0.1);
+    border-color: #7dd8f8;
+    box-shadow: 0 0 30px rgba(125, 216, 248, 0.6), inset 0 0 20px rgba(125, 216, 248, 0.1);
 }
 
 .center-search input {
@@ -348,7 +348,7 @@ html, body {
 
 <body>
 
-<!-- Falling Stars Background -->
+<!-- Light Blue Particles Background -->
 <div class="stars-container" id="starsContainer"></div>
 
 <div class="browser-ui">
@@ -372,7 +372,7 @@ html, body {
 <div class="ntp" id="ntp">
     <h1 class="neon-text">classroomspot</h1>
     
-    <!-- Center Search Bar (below title like the image) -->
+    <!-- Center Search Bar -->
     <div class="center-search-container">
         <form class="center-search" id="centerForm">
             <input id="centerUrl" placeholder="Search Google or type an URL">
@@ -381,7 +381,7 @@ html, body {
 </div>
 
 <script>
-// Create falling stars background
+// Create light blue particles that wave to the right
 function createStars() {
     const container = document.getElementById('starsContainer');
     const starCount = 150;
@@ -395,7 +395,6 @@ function createStars() {
         star.style.animationDelay = Math.random() * 3 + 's';
         star.style.animationDuration = (Math.random() * 3 + 2) + 's';
         
-        // Random star sizes
         const size = Math.random() * 2 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
@@ -403,23 +402,38 @@ function createStars() {
         container.appendChild(star);
     }
     
-    // Create falling stars
-    function createFallingStar() {
-        const fallingStar = document.createElement('div');
-        fallingStar.className = 'falling-star';
-        fallingStar.style.left = (Math.random() * 100 + 20) + '%';
-        fallingStar.style.top = '-10px';
-        fallingStar.style.animationDuration = (Math.random() * 2 + 1) + 's';
-        
-        container.appendChild(fallingStar);
-        
+    // Create rightward-waving particles
+    function createWavingParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'falling-star';
+
+        // Spawn randomly on left side of screen
+        const startX = Math.random() * 30; // Start from left 30% of screen
+        const startY = Math.random() * 100;
+        particle.style.left = startX + '%';
+        particle.style.top = startY + '%';
+
+        const duration = (Math.random() * 2.5 + 1.5) + 's';
+        particle.style.animationDuration = duration;
+
+        // Wave offset: oscillate vertically using a random sine amplitude
+        const waveAmp = (Math.random() * 120 - 60); // -60px to +60px vertical drift
+        particle.style.setProperty('--wave-offset', waveAmp + 'px');
+
+        // Vary size slightly
+        const size = Math.random() * 2 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        container.appendChild(particle);
+
         setTimeout(() => {
-            fallingStar.remove();
-        }, 4000);
+            particle.remove();
+        }, 5000);
     }
     
-    // Create falling stars periodically
-    setInterval(createFallingStar, 600);
+    // Spawn waving particles periodically
+    setInterval(createWavingParticle, 400);
 }
 
 createStars();
@@ -570,7 +584,6 @@ form.onsubmit = e => {
     if (urlInput.value.trim()) navigate(urlInput.value)
 }
 
-// Center search form handler
 document.getElementById("centerForm").onsubmit = e => {
     e.preventDefault()
     if (centerUrlInput.value.trim()) navigate(centerUrlInput.value)
